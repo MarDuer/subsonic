@@ -7,19 +7,30 @@
 
 set -e
 
-#if [ "$1" = 'subsonic' ]; then
-#    exec gosu subsonic "$@"
-#fi
+# Here a view possible commands to start the docker container
+# Before it is possible to access the folder on Windows it is necessary to grant access in the Docker desktop settings
+# docker run -it -p 4040:4040 -v //c/Users/markus/Documents/GitHub/subsonic/var/subsonic:/usr/var/subsonic -v //c/Users/markus/Documents/GitHub/subsonic/music:/srv/dev-disk-by-label-SWRaid01/MUSIK subsonictest01 subsonic
+# docker run -it -p 4040:4040 -v //c/Users/markus/Documents/GitHub/subsonic/var/subsonic:/usr/var/subsonic -v //c/Users/markus/Documents/GitHub/subsonic/music:/srv/dev-disk-by-label-SWRaid01/MUSIK subsonictest01 bash
 
-echo "Lets start subsonic now"
 
-#/var/subsonic/subsonic.sh is normall called - see docker file - with exec it does not work - currently not clear why not - has to be checked
-$@
+if [ "$1" = 'subsonic' ]; then
+    #exec gosu subsonic "$@"
 
-echo "Subsonic should be started now"
+    echo "Lets start subsonic now"
 
-#stayin' alive... - has to be checked if there is a better way to keep the container alive
-sleep infinity
+    # start the subsonic media server
+    /usr/local/subsonic/subsonic.sh
+
+    echo "Subsonic should be started now"
+
+    #stayin' alive... - has to be checked if there is a better way to keep the container alive
+    sleep infinity
+
+fi
+
+exec $@
+
+
 
 
 

@@ -48,10 +48,11 @@ EXPOSE 4043
 RUN apt-get update \
     && apt-get install -y gosu openjdk-8-jre wget libav-tools lame \
     && mkdir /var/subsonic \
-    && wget -O /var/subsonic/subsonic.tar.gz https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-${SUBSONIC_VERSION}-standalone.tar.gz \
-    && tar -zxf /var/subsonic/subsonic.tar.gz -C /var/subsonic \
-    && rm /var/subsonic/subsonic.tar.gz \
-	&& rm /var/subsonic/subsonic.bat \
+	&& mkdir /usr/local/subsonic \
+    && wget -O /usr/local/subsonic/subsonic.tar.gz https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-${SUBSONIC_VERSION}-standalone.tar.gz \
+    && tar -zxf /usr/local/subsonic/subsonic.tar.gz -C /usr/local/subsonic \
+    && rm /usr/local/subsonic/subsonic.tar.gz \
+	&& rm /usr/local/subsonic/subsonic.bat \
 	&& mkdir -p ${OLD_MUSIC_DIRECTORY}
 
 # for debugging maybe the following packages are interessting: apt-get install procps
@@ -59,9 +60,10 @@ RUN apt-get update \
 
 # make the music directory visible to extern
 VOLUME ["${OLD_MUSIC_DIRECTORY}"]
+VOLUME [ "/var/subsonic" ]
 
 # make the subsonic script executable
-RUN chmod +x /var/subsonic/subsonic.sh
+RUN chmod +x /usr/local/subsonic/subsonic.sh
 
 # copy the entrypoint script and make it executable
 COPY docker-entrypoint.sh /usr/local/bin/
@@ -72,7 +74,7 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # Entrypoint for the docker image
 ENTRYPOINT ["docker-entrypoint.sh"]
 # Run this when the container is started
-CMD ["/var/subsonic/subsonic.sh"]
+CMD ["/usr/local/subsonic/subsonic.sh"]
 
 
 

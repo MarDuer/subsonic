@@ -14,7 +14,7 @@ LABEL maintainer="marduer <markus.d@gmx.de>"
 # Environment variables
 
 # Used Subsonic version
-ENV SUBSONIC_VERSION 6.1.5
+ENV SUBSONIC_VERSION 6.1.6
 # Used port for Subsonic
 ENV PORT 4040
 # Used path for context (for something like yourdomain.org/subsonic)
@@ -48,19 +48,19 @@ EXPOSE 4043
 RUN apt-get update \
     && apt-get install -y gosu openjdk-8-jre wget libav-tools lame \
     && mkdir /var/subsonic \
-	&& mkdir /usr/local/subsonic \
+    && mkdir /usr/local/subsonic \
     && wget -O /usr/local/subsonic/subsonic.tar.gz https://s3-eu-west-1.amazonaws.com/subsonic-public/download/subsonic-${SUBSONIC_VERSION}-standalone.tar.gz \
     && tar -zxf /usr/local/subsonic/subsonic.tar.gz -C /usr/local/subsonic \
     && rm /usr/local/subsonic/subsonic.tar.gz \
-	&& rm /usr/local/subsonic/subsonic.bat \
-	&& mkdir -p ${OLD_MUSIC_DIRECTORY}
+    && rm /usr/local/subsonic/subsonic.bat \
+    && mkdir -p ${OLD_MUSIC_DIRECTORY}
 
 # for debugging maybe the following packages are interessting: apt-get install procps
 
 
 # make the music directory visible to extern
 VOLUME ["${OLD_MUSIC_DIRECTORY}"]
-VOLUME [ "/var/subsonic" ]
+VOLUME ["/var/subsonic"]
 
 # make the subsonic script executable
 RUN chmod +x /usr/local/subsonic/subsonic.sh
